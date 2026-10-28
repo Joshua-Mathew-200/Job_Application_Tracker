@@ -10,6 +10,18 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use("/api/applications", require("./routes/applications"));
+
+app.use((err, req, res, next) => {
+  res.status(err.status === 400 ? 400 : 500).json({
+    success: false,
+    message:
+      err.status === 400
+        ? "Invalid JSON request."
+        : "Something went wrong.",
+    data: null,
+  });
+});
 
 app.get("/api/health", (req, res) => {
   const connected = mongoose.connection.readyState === 1;
