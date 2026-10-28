@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
-const API = "http://localhost:5000/api/applications";
+const API = import.meta.env.PROD
+  ? "/api/applications"
+  : "http://localhost:5000/api/applications";
 const statuses = [
   "Applied", "Interview", "Offer",
   "Rejected", "Accepted", "Declined",

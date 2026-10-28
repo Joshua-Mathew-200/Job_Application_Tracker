@@ -1,5 +1,5 @@
 require("dotenv").config();
-
+const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -11,6 +11,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api/applications", require("./routes/applications"));
+if (process.env.NODE_ENV === "production") {
+  const frontendDist = path.join(__dirname, "../frontend/dist");
+
+  app.use(express.static(frontendDist));
+
+  app.get("/", (req, res) => {
+    res.sendFile(path.join(frontendDist, "index.html"));
+  });
+}
 
 app.use((err, req, res, next) => {
   res.status(err.status === 400 ? 400 : 500).json({
