@@ -10,7 +10,14 @@ const STATUSES = [
 ];
 
 const applicationSchema = new mongoose.Schema(
-  {
+    {
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      immutable: true,
+      index: true,
+    },
     applicationId: {
       type: String,
       required: true,
@@ -94,7 +101,7 @@ const applicationSchema = new mongoose.Schema(
 
 // Block duplicate company and role while an application is active.
 applicationSchema.index(
-  { companyKey: 1, roleKey: 1 },
+    { owner: 1, companyKey: 1, roleKey: 1 },
   {
     unique: true,
     partialFilterExpression: { active: true },

@@ -157,7 +157,7 @@ function handleError(error, res) {
 // GET all applications, with backend search and status filtering.
 router.get("/", async (req, res) => {
   try {
-    const filter = {};
+    const filter = { owner: req.user._id };
     const { status, search } = req.query;
 
     if (status && !Object.hasOwn(transitions, status)) {
@@ -179,6 +179,7 @@ router.get("/", async (req, res) => {
       .sort({ createdAt: -1 });
 
     const groups = await Application.aggregate([
+            { $match: { owner: req.user._id } },
       { $group: { _id: "$status", count: { $sum: 1 } } },
     ]);
 
@@ -217,6 +218,7 @@ router.post("/", async (req, res) => {
       const fields = editableFields(body);
 
       const duplicate = await Application.findOne({
+                owner: req.user._id,
         companyKey: fields.companyKey,
         roleKey: fields.roleKey,
         active: true,
@@ -253,7 +255,8 @@ router.post("/", async (req, res) => {
 
       const created = await Application.create(
         [{
-          ...fields,
+                    ...fields,
+          owner: req.user._id,
           applicationId,
           appliedDate: body.appliedDate,
           followUpDate: followUp.toISOString().slice(0, 10),
@@ -291,7 +294,7 @@ router.use("/:id", (req, res, next) => {
 // GET one application and its history.
 router.get("/:id", async (req, res) => {
   try {
-    const application = await Application.findById(req.params.id);
+    const application = await Application.findOne({ _id: req.params.id, owner: req.user._id });
 
     if (!application) return fail(res, 404, "Application not found.");
 
@@ -375,7 +378,7 @@ router.patch("/:id/status", async (req, res) => {
     );
 
     if (!application) {
-      const existing = await Application.findById(req.params.id);
+      const existing = await Application.findOne({ _id: req.params.id, owner: req.user._id });
 
       if (!existing) return fail(res, 404, "Application not found.");
 
@@ -405,7 +408,7 @@ router.delete("/:id", async (req, res) => {
     });
 
     if (!application) {
-      const existing = await Application.findById(req.params.id);
+      const existing = await Application.findOne({ _id: req.params.id, owner: req.user._id });
 
       if (!existing) return fail(res, 404, "Application not found.");
 
