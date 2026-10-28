@@ -164,3 +164,39 @@ The :id parameter is the MongoDB document ID returned in _id.
 ## Live Website
 
 https://job-application-tracker-joshua.onrender.com/
+
+## Authentication
+
+- Register with your name, email and a password of at least 8 characters.
+- Log in to manage your applications.
+- Each user can access only their own applications and status counts.
+- Passwords are hashed with bcrypt.
+- Sessions are stored in MongoDB.
+- Log out using the dashboard button.
+- Evaluators can register a new account; no shared login is required.
+
+### Authentication APIs
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| POST | /api/auth/register | Create an account |
+| POST | /api/auth/login | Log in |
+| GET | /api/auth/me | Get the logged-in user |
+| POST | /api/auth/logout | Log out |
+
+Application APIs require a logged-in session.
+Unauthenticated requests return HTTP 401.
+
+### Additional Environment Variables
+
+For local development, backend/.env also contains:
+
+SESSION_SECRET=<local test session secret>
+NODE_ENV=development
+
+For Render, NODE_ENV is production and a separate SESSION_SECRET
+is configured in the service environment.
+
+### Login Screen
+
+![Login screen](screenshots/login.png)
