@@ -30,14 +30,26 @@ A responsive MERN application for recording job applications and tracking their 
 ```text
 Job_Application_Tracker/
 ├── frontend/
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── Dashboard.jsx
+│   │   └── App.css
+│   └── package.json
 ├── backend/
 │   ├── models/
+│   │   ├── Application.js
+│   │   ├── Counter.js
+│   │   └── User.js
 │   ├── routes/
+│   │   ├── applications.js
+│   │   └── auth.js
 │   ├── .env
-│   └── server.js
+│   ├── server.js
+│   └── package.json
 ├── screenshots/
 │   ├── dashboard.png
-│   └── status-history.png
+│   ├── status-history.png
+│   └── login.png
 └── README.md
 ```
 
